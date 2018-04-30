@@ -11,8 +11,12 @@ class Student < InteractiveRecord
     :grade => 'TEXT'
   }
 
-  def initialize
+  attr_accessor :id, :name, :grade
 
+  def initialize(options={})
+    options.each do |property, value|
+      self.send("#{property}=", value)
+    end
   end
 
   def self.table_name
@@ -24,5 +28,14 @@ class Student < InteractiveRecord
       a.to_s
     end
   end
+
+  def table_name_for_insert
+    self.class.table_name
+  end
+
+  def col_names_for_insert
+    self.class.column_names.delete_if {|col| col = 'id'}.join(" ,")
+  end
+
 
 end
